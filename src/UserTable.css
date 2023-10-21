@@ -1,0 +1,68 @@
+/* UserTable.css */
+
+/* Style the main container */
+.UserTable {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+/* Style the button container */
+.button-container {
+  margin-bottom: 10px;
+}
+
+/* Style the button */
+.button-container button {
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Style the table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table th,
+table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+/* Style selected user details */
+.selected-user {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.selected-user h2 {
+  font-size: 18px;
+}
+
+.selected-user table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.selected-user th,
+.selected-user td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}

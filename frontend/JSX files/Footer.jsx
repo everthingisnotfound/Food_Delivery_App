@@ -1,5 +1,5 @@
 import React from 'react';
-import './Delivery app/CSS files/footer.css';
+import './footer.css'; // Assuming the CSS file is in the same directory as your Footer component
 
 const Footer = () => {
   return (
@@ -10,9 +10,9 @@ const Footer = () => {
       <div className="footer1">
         Connect with us
         <ul className="social-media">
-          <li><a href="#"><img src="images/No-facebook.png" alt="Facebook"></a></li>
-          <li><a href="#"><img src="images/NO-linkedIn.png" alt="LinkedIn"></a></li>
-          <li><a href="#"><img src="images/NO-instagram.png" alt="Instagram"></a></li>
+          <li><a href="#"><img src="images/No-facebook.png" alt="Facebook" /></a></li>
+          <li><a href="#"><img src="images/NO-linkedIn.png" alt="LinkedIn" /></a></li>
+          <li><a href="#"><img src="images/NO-instagram.png" alt="Instagram" /></a></li>
         </ul>
       </div>
       <div className="footer2">
