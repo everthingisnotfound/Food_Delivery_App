@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon Demo.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -12,6 +12,11 @@
   "dependencies": {
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
-    "mongoose": "^7.6.3"
+    "mongoose": "^7.6.3",
+    "axios": "^1.5.1",
+    "bcrpyt": "^2.0.0",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.2",
+    "express-jwt": "^8.4.1"
   }
 }
