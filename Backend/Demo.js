@@ -58,6 +58,11 @@ app.use(
     })
 );
 
+const dishes = require("./routes/dishRoutes"); // Replace with the actual path to your dishes routes
+const userRoutes = require("./routes/userRoutes"); // Replace with the actual path to your user routes
+
+app.use("/api", dishes);
+app.use("/api/user", userRoutes);
 // Add your routes here, which will now require JWT authentication
 
 // The predefined code is retained
