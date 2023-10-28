@@ -1,5 +1,9 @@
 import React from 'react';
-import './footer.css'; // Assuming the CSS file is in the same directory as your Footer component
+import FacebookIcon from "@mui/icons-material/Facebook";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import './Footer.css';
 
 const Footer = () => {
   return (
@@ -7,13 +11,22 @@ const Footer = () => {
       <div className="footer0">
         <h1>Khanaja</h1>
       </div>
-      <div className="footer1">
+      <div className="footer-social">
         Connect with us
-        <ul className="social-media">
-          <li><a href="#"><img src="images/No-facebook.png" alt="Facebook" /></a></li>
-          <li><a href="#"><img src="images/NO-linkedIn.png" alt="LinkedIn" /></a></li>
-          <li><a href="#"><img src="images/NO-instagram.png" alt="Instagram" /></a></li>
-        </ul>
+        <div className="footer-social-icons">
+          <p className="facebook-icon">
+            <FacebookIcon />
+          </p>
+          <p className="insta-icon">
+            <InstagramIcon />
+          </p>
+          <p className="twitter-icon">
+            <TwitterIcon />
+          </p>
+          <p className="linkdin-icon">
+            <LinkedInIcon />
+          </p>
+        </div>
       </div>
       <div className="footer2">
         <div className="products">
