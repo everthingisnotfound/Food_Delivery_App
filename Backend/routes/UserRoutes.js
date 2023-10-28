@@ -1,9 +1,12 @@
-const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
 
-const UserModel = mongoose.model("user", {
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-});
+const {
+  registerUser,
+  loginUser,
+} = require("../controllers/userController");
 
-module.exports = UserModel;
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+
+module.exports = router;
