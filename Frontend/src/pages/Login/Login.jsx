@@ -2,9 +2,9 @@ import { Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-
 import "./Login.css";
 
+// Initial state for form fields
 const initialState = {
   name: "",
   email: "",
@@ -13,21 +13,25 @@ const initialState = {
 };
 
 const Login = () => {
-  const [isMember, setIsMember] = useState(false);
-  const [values, setValues] = useState(initialState);
-  const [error, setError] = useState("");
+  // State variables
+  const [isMember, setIsMember] = useState(false); // To switch between login and registration
+  const [values, setValues] = useState(initialState); // To store form input values
+  const [error, setError] = useState(""); // To display error messages
 
   const navigate = useNavigate();
 
+  // Handle input changes and update the form state
   const onHandleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  // Store user data and token in local storage
   const addUserToLocalStorage = ({ user, token }) => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
   };
 
+  // Function to register a new user
   const registerUser = async (currentUser) => {
     try {
       const response = await axios.post(
@@ -46,6 +50,7 @@ const Login = () => {
     }
   };
 
+  // Function to log in an existing user
   const loginUser = async (currentUser) => {
     try {
       const response = await axios.post(
@@ -64,10 +69,10 @@ const Login = () => {
     }
   };
 
+  // Handle form submission
   const onSubmit = (e) => {
     e.preventDefault();
     const { name, email, password, cnf_password } = values;
-    console.log(name);
     const currentUser = { name, email, password, cnf_password };
     if (isMember) {
       loginUser(currentUser);
@@ -75,16 +80,13 @@ const Login = () => {
       registerUser(currentUser);
     }
   };
+
   return (
     <div className="contact-form">
       <h2>Login/Signup</h2>
       <div className="container">
         <form onSubmit={onSubmit}>
-          {error && (
-            <div>
-              <p>{error}</p>
-            </div>
-          )}
+          {error && <div><p>{error}</p></div>}
           {!isMember && (
             <div>
               <TextField
@@ -137,7 +139,7 @@ const Login = () => {
           <Button variant="contained" type="submit">
             {isMember ? "Login" : "Register"}
           </Button>
-          {isMember && (
+          {isMember ? (
             <p className="login-register-text">
               Don't have an account? Please
               <span
@@ -147,8 +149,7 @@ const Login = () => {
                 Register
               </span>
             </p>
-          )}
-          {!isMember && (
+          ) : (
             <p className="login-register-text">
               Already have an account? Please
               <span
