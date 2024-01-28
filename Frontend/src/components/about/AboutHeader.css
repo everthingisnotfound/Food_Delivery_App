@@ -1,0 +1,94 @@
+.about-header {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('https://images.unsplash.com/photo-1515683359900-6922e4964be1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+  background-position: center;
+  color: var(--color-white);
+  flex-direction: column;
+  height: 70vh;
+}
+
+.about-header h1 {
+  font-size: 5rem;
+  
+}
+.about-header h3 {
+  font-size: 2rem;
+}
+
+.about-header p {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  font-size: 17px;
+  line-height: 1.2;
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+
+.about-icons {
+  width: 100%;
+  max-width: 200px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.about-icons a {
+  color: var(--color-white);
+}
+
+@media (max-width: 768px) {
+  .about-icons {
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .about-icons {
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 360px) {
+  .about-icons {
+    max-width: 80px;
+  }
+}
+
+.about-scroll-down {
+  margin-right: 20px;
+  width: 70px;
+  height: 70px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+}
+.about-scroll-down div {
+  background-color: black;
+  opacity: 75%;
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  color: aliceblue;
+  cursor: pointer;
+  border: 1px solid white;
+} 
+
+@media (max-width: 768px) {
+  .about-scroll-down {
+    width: 20px;
+    height: 20px;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .about-scroll-down {
+    width: 15px;
+    height: 15px;
+    margin-top: 20px;
+  }
+}

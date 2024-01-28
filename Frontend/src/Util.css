@@ -1,0 +1,88 @@
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.align-center{
+  align-items: center;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flex-sa {
+  display: flex;
+  justify-content: space-around;
+}
+
+.flex-se {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.flex-sb {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.primary-btn{
+  width: 10rem;
+  padding: 1rem;
+  font-weight: var(--font-semi-bold);
+  background-color: var(--color-salmon);
+}
+
+.link {
+  text-decoration: none;
+  color: var(--color-blue);
+  transition: 100ms ease-in-out;
+}
+
+.link-hover:hover{
+  color: var(--color-light-green);
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  max-height: auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+.mt-5 {
+  margin-top: 5rem;
+}
+
+
+.login-btn{
+  background: transparent;
+  font-size: 15px;
+  font-weight: var(--font-semi-bold);
+  color: var(--color-blue);
+  padding: 1rem;
+  text-align: center;
+}
+
+.checkout-btn {
+  width: 100%;
+    padding: 1rem 2rem;
+    font-weight: var(--font-bold);
+    background-color: var(--color-light-green);
+    color: var(--color-blue);
+  }

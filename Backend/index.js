@@ -1,84 +1,71 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); // Import JWT package
-const cors = require('cors');
+const express = require('express')
+const cors = require('cors')
+// const {authenticateToken} = require('./middleware/authMiddleware')
+const mongoose = require('mongoose')
+const app = express()
+const dotenv = require('dotenv')
+dotenv.config()
+const PORT = process.env.PORT || 8080
+const dish = require('./routes/dishRouter')
+const service = require('./routes/serviceRouter')
+const user = require('./routes/userRouter')
+const order = require('./routes/orderRouter')
+const address = require('./routes/addressRouter')
+const cart = require('./routes/cartRouter')
 
-const app = express();
-const port = process.env.PORT || 5000;
+const stripe = require('stripe')(process.env.STRIPE_KEY)
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://saxenaarjun1239:ArjunSaxena1239@cluster0.ourho3r.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => console.log('Connected to MongoDB'));
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to MongoDB')
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error)
+  })
 
-// Define a user schema and model
-const userSchema = new mongoose.Schema({
-  username: String,
-  email: String,
-  password: String,
-});
+app.use(express.json())
+app.use(cors())
+app.use(express.static('public'))
 
-const User = mongoose.model('User', userSchema);
+//checkout api
+app.post('/api/create-checkout-session', async (req, res) => {
+  const { products, total } = req.body
+  console.log(products)
 
-// Middleware to parse JSON requests
-app.use(express.json());
+  const lineItems = products.map((product) => ({
+    price_data: {
+      currency: 'INR',
+      product_data: {
+        name: product.name,
+      },
+      unit_amount: parseInt(product.price) * 1000,
+    },
+    quantity: product.quantity,
+    // total : total
+  }))
 
-// JWT Secret Key (Replace with your own secret key)
-const jwtSecret = 'your_secret_key';
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: lineItems,
+    mode: 'payment',
+    success_url: `${process.env.BASE_URL}/success`,
+    cancel_url: `${process.env.BASE_URL}/cancel`,
+  })
 
-// Enable CORS
-app.use(cors());
+  res.json({ id: session.id })
+})
 
-// Register route
-app.post('/api/login', async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
-      return res.status(400).json({ error: 'All fields are required.' });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
+app.use('/api', dish)
+app.use('/api', service)
+app.use('/api/user', user)
+app.use('/api', order)
+app.use('/api', address)
+app.use('/api', cart)
 
-    // Generate a JWT token upon successful registration
-    const token = jwt.sign({ username: newUser.username, email: newUser.email }, jwtSecret);
-    res.status(201).json({ message: 'User registered successfully.', token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error.' });
-  }
-});
-
-// JWT authentication middleware
-app.use('/api/protected', (req, res, next) => {
-  const token = req.header('x-auth-token'); // Assuming you're sending the token in a header
-  if (!token) {
-    return res.status(401).json({ error: 'No token, authorization denied' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, jwtSecret);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ error: 'Token is not valid' });
-  }
-});
-
-// Example protected route
-app.get('/api/protected/data', (req, res) => {
-  res.json({ message: 'This is a protected route' });
-});
-
-const dishes = require("./routes/dishRoutes"); // Replace with the actual path to your dishes routes
-const userRoutes = require("./routes/userRoutes"); // Replace with the actual path to your user routes
-
-app.use("/api", dishes);
-app.use("/api/user", userRoutes);
-// Add your routes here, which will now require JWT authentication
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.listen(PORT, () => {
+  console.log(`Backend is running on port ${PORT}`)
+})

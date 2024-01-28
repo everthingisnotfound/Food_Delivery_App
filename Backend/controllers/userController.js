@@ -1,133 +1,93 @@
-const UserModel = require("../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const uuid = require('uuid')
+const SECRET_KEY = process.env.JWT_SECRET_KEY
+const User = require('../models/user')
 
+//  @method     - post
+//  @access     - public
+//  @endpoint   - /user/register
 const registerUser = async (req, res) => {
-  const { name, email, password, cnf_password } = req.body;
+  try {
+    const { username, email, password } = req.body
 
-  if (password !== cnf_password) {
-    return res.status(500).send("The two passwords don't match");
+    if (!username || !email || !password) {
+      return res.status(400).send({ error: 'All fields are required!!' })
+    }
+
+    const user = await User.findOne({ email: email })
+
+    if (!user) {
+      const salt = await bcrypt.genSalt(10)
+      const hashPassword = await bcrypt.hash(password, salt)
+      const userId = uuid.v4()
+
+      const newUser = new User({
+        userId: userId,
+        username: username,
+        email: email,
+        password: hashPassword,
+      })
+
+      await newUser.save()
+      res.status(201).send({ message: 'user registered successfully!!' })
+    } 
+    else {
+      return res.status(400).send({ message: 'user already exist' })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({ error: 'regitration failed' })
   }
+}
 
-  const user = await UserModel.findOne({ email: email });
-
-  if (!user) {
-    // Hash password using bcrypt module
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-
-    const newUser = new UserModel({
-      name: name,
-      email: email,
-      password: hashPassword,
-    });
-
-    const savedUser = newUser.save();
-    // create payload then Generate an access token
-
-    const token = jwt.sign({ userId: savedUser._id }, "randomsecret");
-    return res.status(200).json({
-      user: newUser,
-      token: token,
-    });
-  } else {
-    return res.status(500).send("User already exists!");
-  }
-};
-
+//  @method     - post
+//  @access     - public
+//  @endpoint   - /user/login
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await UserModel.findOne({ email: email });
+  const { email, password } = req.body
+  const user = await User.findOne({ email: email })
 
   if (!user) {
-    return res.status(400).send("User does not exist");
+    return res.status(400).send({ message: 'user not registered !!' })
   }
 
-  const isPasswordMatchingFromDb = await bcrypt.compare(
-    password,
-    user.password
-  );
+  const isPasswordMatching = await bcrypt.compare(password, user.password)
 
-  if (isPasswordMatchingFromDb) {
-    const token = jwt.sign({ userId: user._id }, "randomsecret");
+  if (isPasswordMatching) {
+    const token = jwt.sign(
+      { email: user.email, userId: user.userId },
+      SECRET_KEY
+    )
     return res.status(200).json({
-      user: user,
+      user: {
+        username: user.username,
+        email: user.email,
+      },
       token: token,
-    });
+      message: 'user login successfully!!',
+    })
   }
 
-  return res.status(401).send("Incorrect login credentials");
-};
+  return res.status(400).send({ message: 'Incorrect login credentials' })
+}
+
+//  @method     - delete
+//  @access     - private
+//  @endpoint   - /user/delete
+const deleteUser = async (req, res) => {
+  try {
+    const { email } = req.body
+    await User.deleteOne({ email: email })
+
+    return res.status(200).send({ message: 'account deleted !!' })
+  } catch (e) {
+    console.log('internal error')
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
-};
-
-//
-// const UserModel = require("../models/User");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
-
-// const registerUser = async (req, res) => {
-//   const { name, email, password, cnf_password } = req.body;
-
-//   if (password !== cnf_password) {
-//     return res.status(500).send("The two passwords don't match");
-//   }
-
-//   const user = await UserModel.findOne({ email: email });
-
-//   if (!user) {
-//     // Hash password using bcrypt module
-//     const salt = await bcrypt.genSalt(10);
-//     const hashPassword = await bcrypt.hash(password, salt);
-
-//     const newUser = new UserModel({
-//       name: name,
-//       email: email,
-//       password: hashPassword,
-//     });
-
-//     const savedUser = newUser.save();
-//     // create payload then Generate an access token
-
-//     const token = jwt.sign({ userId: savedUser._id }, "randomsecret");
-//     return res.status(200).json({
-//       user: newUser,
-//       token: token,
-//     });
-//   } else {
-//     return res.status(500).send("User already exists!");
-//   }
-// };
-
-// const loginUser = async (req, res) => {
-//   const { email, password } = req.body;
-
-//   const user = await UserModel.findOne({ email: email });
-
-//   if (!user) {
-//     return res.status(400).send("User does not exist");
-//   }
-
-//   const isPasswordMatchingFromDb = await bcrypt.compare(
-//     password,
-//     user.password
-//   );
-
-//   if (isPasswordMatchingFromDb) {
-//     const token = jwt.sign({ userId: user._id }, "randomsecret");
-//     return res.status(200).json({
-//       user: user,
-//       token: token,
-//     });
-//   }
-
-//   return res.status(401).send("Incorrect login credentials");
-// };
-
-// module.exports = {
-//   registerUser,
-//   loginUser,
-// };
+  deleteUser,
+}
